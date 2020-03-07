@@ -11,8 +11,11 @@ void main() => runApp(MaterialApp(
               title: TextStyle(
                 fontFamily: 'IBM Plex Serif',
                 color: Colors.white,
-                fontSize: 20.0,
+                fontSize: 16.0,
               ),
-              body1: TextStyle(fontFamily: 'Muli', color: Colors.white,fontSize: 18.0))),
+              body1: TextStyle(
+                  fontFamily: 'Muli',
+                  color: Colors.white,
+                  fontSize: 14.0))),
       home: CreateTask(),
     ));

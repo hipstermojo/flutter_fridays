@@ -89,7 +89,7 @@ class CreateTask extends StatelessWidget {
                         Text(
                           'Edit',
                           style: Theme.of(context).textTheme.body1.copyWith(
-                              fontSize: 16.0, color: Colors.grey[600]),
+                              fontSize: 14.0, color: Colors.grey[600]),
                         )
                       ],
                     ),
@@ -216,7 +216,7 @@ class CreateTask extends StatelessWidget {
                     ),
                     TimeRange(),
                     SizedBox(
-                      height: 40.0,
+                      height: 30.0,
                     )
                   ],
                 ),
