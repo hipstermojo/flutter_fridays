@@ -216,7 +216,7 @@ class CreateTask extends StatelessWidget {
                     ),
                     TimeRange(),
                     SizedBox(
-                      height: 40.0,
+                      height: 30.0,
                     )
                   ],
                 ),
