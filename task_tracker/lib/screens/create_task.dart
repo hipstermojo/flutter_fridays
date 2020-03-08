@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tasktracker/widgets/custom_button.dart';
+import 'package:tasktracker/widgets/custom_chip.dart';
 
 import 'package:tasktracker/widgets/time_range.dart';
 
@@ -65,6 +67,7 @@ class CreateTask extends StatelessWidget {
                       style: Theme.of(context).textTheme.title,
                     ),
                     TextField(
+                      style: Theme.of(context).textTheme.body1,
                       decoration: InputDecoration(
                           enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey[600])),
@@ -97,23 +100,7 @@ class CreateTask extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 10.0),
                       child: Wrap(
                         children: _categories
-                            .map((category) => Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      border: Border.all(
-                                          width: 1.0, color: Colors.grey[600])),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 5.0),
-                                  margin:
-                                      EdgeInsets.only(right: 5.0, bottom: 5.0),
-                                  child: Text(
-                                    category,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .body1
-                                        .copyWith(color: Colors.grey[600]),
-                                  ),
-                                ))
+                            .map((category) => CustomChip(category))
                             .toList(),
                       ),
                     ),
@@ -178,28 +165,12 @@ class CreateTask extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: _days
-                          .map((day) => Container(
-                                width: 40.0,
-                                height: 40.0,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 1.0, color: Colors.grey[600]),
-                                    borderRadius: BorderRadius.circular(5.0)),
-                                child: Text(
-                                  day,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .body1
-                                      .copyWith(color: Colors.grey[600]),
-                                ),
-                                alignment: Alignment.center,
-                              ))
+                          .map((day) => CustomButton(day))
                           .toList(),
                     ),
                     SizedBox(
                       height: 20.0,
                     ),
-
                     TimeRange(),
                     SizedBox(
                       height: 30.0,
