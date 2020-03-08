@@ -196,24 +196,10 @@ class CreateTask extends StatelessWidget {
                               ))
                           .toList(),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'Time range',
-                          style: Theme.of(context).textTheme.title,
-                        ),
-                        Switch(
-                          value: true,
-                          onChanged: (bool value) {
-                            print(value);
-                          },
-                        )
-                      ],
-                    ),
                     SizedBox(
                       height: 20.0,
                     ),
+
                     TimeRange(),
                     SizedBox(
                       height: 30.0,

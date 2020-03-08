@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 class DoubleEndedSlider extends StatefulWidget {
   final Function onUpdateLower;
   final Function onUpdateUpper;
+  final bool isActive;
   DoubleEndedSlider(
-      {@required this.onUpdateLower, @required this.onUpdateUpper});
+      {@required this.onUpdateLower,
+      @required this.onUpdateUpper,
+      this.isActive = true});
 
   @override
   _DoubleEndedSliderState createState() => _DoubleEndedSliderState();
@@ -17,11 +20,14 @@ class _DoubleEndedSliderState extends State<DoubleEndedSlider> {
   int _lowerBound = 0;
   int _upperBound = _DOT_COUNT;
 
+  Color _getColor() {
+    return widget.isActive ? Colors.white : Colors.grey[600];
+  }
+
   Widget _buildDot(index) {
-    bool isOutOfBounds =index <= _lowerBound || index >= _upperBound;
-    Color color = isOutOfBounds
-        ? Colors.grey[600]
-        : Colors.white;
+    bool isOutOfBounds = index <= _lowerBound || index >= _upperBound;
+    Color color =
+        isOutOfBounds || !widget.isActive ? Colors.grey[600] : Colors.white;
 
     return Container(
       width: 2.0,
@@ -49,7 +55,8 @@ class _DoubleEndedSliderState extends State<DoubleEndedSlider> {
             onHorizontalDragUpdate: (details) {
               setState(() {
                 double newPos = _leftLimitPos + details.primaryDelta;
-                if (newPos + 20.0 < context.size.width &&
+                if (widget.isActive &&
+                newPos + 20.0 < context.size.width &&
                     newPos > 0.0 &&
                     newPos + 10.0 < context.size.width - _rightLimitPos) {
                   _leftLimitPos += details.primaryDelta;
@@ -68,7 +75,7 @@ class _DoubleEndedSliderState extends State<DoubleEndedSlider> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2.0),
-                color: Colors.white,
+                color: _getColor(),
               ),
               width: 10.0,
               height: 30.0,
@@ -81,7 +88,8 @@ class _DoubleEndedSliderState extends State<DoubleEndedSlider> {
             onHorizontalDragUpdate: (details) {
               setState(() {
                 double newPos = _rightLimitPos - details.primaryDelta;
-                if (newPos + 10.0 < context.size.width &&
+                if (widget.isActive &&
+                newPos + 10.0 < context.size.width &&
                     newPos > 0.0 &&
                     newPos + 10.0 < context.size.width - _leftLimitPos) {
                   _rightLimitPos -= details.primaryDelta;
@@ -96,7 +104,7 @@ class _DoubleEndedSliderState extends State<DoubleEndedSlider> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2.0),
-                color: Colors.white,
+                color: _getColor(),
               ),
               width: 10.0,
               height: 30.0,
