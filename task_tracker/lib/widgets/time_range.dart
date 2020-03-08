@@ -35,7 +35,6 @@ class _TimeRangeState extends State<TimeRange> {
               onChanged: (value) {
                 setState(() {
                   _isActive = value;
-                  print(_isActive);
                 });
               },
             ),
