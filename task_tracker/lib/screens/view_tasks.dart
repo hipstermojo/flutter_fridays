@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasktracker/widgets/task_tile.dart';
 
 class ViewTasks extends StatelessWidget {
   List<Icon> _navBarItems = [
@@ -7,7 +8,7 @@ class ViewTasks extends StatelessWidget {
     Icon(Icons.calendar_today)
   ];
 
-  List<String> months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  List<String> _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
   Widget customDot = Container(
     height: 2.0,
@@ -18,7 +19,7 @@ class ViewTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
           Expanded(
@@ -70,16 +71,17 @@ class ViewTasks extends StatelessWidget {
                                   margin: EdgeInsets.fromLTRB(
                                       40.0, 0.0, 40.0, 20.0),
                                   child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: months
-                                          .map((month) => Text(
-                                                month,
-                                                style: TextStyle(
-                                                    fontSize: 12.0,
-                                                    color: Colors.grey[600]),
-                                              ))
-                                          .toList()))
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: _months
+                                        .map((month) => Text(
+                                              month,
+                                              style: TextStyle(
+                                                  fontSize: 12.0,
+                                                  color: Colors.grey[600]),
+                                            ))
+                                        .toList(),
+                                  ))
                             ],
                           ),
                           Row(
@@ -148,7 +150,7 @@ class ViewTasks extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(top: 20.0, bottom: 10.0),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -167,6 +169,14 @@ class ViewTasks extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Expanded(
+                    child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: 4,
+                        itemBuilder: (BuildContext _, int index) {
+                          return TaskTile();
+                        }),
+                  )
                 ],
               )),
           Expanded(
