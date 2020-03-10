@@ -205,10 +205,13 @@ class CreateTask extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20.0),
                             border: Border.all(
                                 width: 2.0, color: Colors.grey[600])),
-                        child: Icon(
-                          Icons.close,
-                          size: 16.0,
-                          color: Colors.grey[600],
+                        child: GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(
+                            Icons.close,
+                            size: 16.0,
+                            color: Colors.grey[600],
+                          ),
                         ),
                       ),
                     )

@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:tasktracker/screens/create_task.dart';
 import 'package:tasktracker/widgets/task_tile.dart';
 
 class ViewTasks extends StatelessWidget {
-  List<Icon> _navBarItems = [
-    Icon(Icons.home),
-    Icon(Icons.add_circle_outline),
-    Icon(Icons.calendar_today)
-  ];
+  final List<String> _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
-  List<String> _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-
-  Widget customDot = Container(
+  final Widget customDot = Container(
     height: 2.0,
     width: 2.0,
     decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
@@ -19,7 +14,8 @@ class ViewTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.white,
+    return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
           Expanded(
@@ -185,7 +181,14 @@ class ViewTasks extends StatelessWidget {
               color: Colors.white,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: _navBarItems,
+                children: [
+                  Icon(Icons.home),
+                  GestureDetector(
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => CreateTask())),
+                      child: Icon(Icons.add_circle_outline)),
+                  Icon(Icons.calendar_today)
+                ],
               ),
             ),
           ),
