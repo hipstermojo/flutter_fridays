@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tasktracker/screens/create_task.dart';
+import 'package:tasktracker/screens/view_tasks.dart';
 
 void main() => runApp(MaterialApp(
       title: 'Task Tracker',
@@ -14,8 +14,6 @@ void main() => runApp(MaterialApp(
                 fontSize: 16.0,
               ),
               body1: TextStyle(
-                  fontFamily: 'Muli',
-                  color: Colors.white,
-                  fontSize: 14.0))),
-      home: CreateTask(),
+                  fontFamily: 'Muli', color: Colors.white, fontSize: 14.0))),
+      home: ViewTasks(),
     ));

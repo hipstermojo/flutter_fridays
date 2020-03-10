@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tasktracker/widgets/custom_action_chip.dart';
 import 'package:tasktracker/widgets/custom_button.dart';
-import 'package:tasktracker/widgets/custom_chip.dart';
 
 import 'package:tasktracker/widgets/time_range.dart';
 
@@ -100,7 +100,7 @@ class CreateTask extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 10.0),
                       child: Wrap(
                         children: _categories
-                            .map((category) => CustomChip(category))
+                            .map((category) => CategoryChip(category))
                             .toList(),
                       ),
                     ),
@@ -164,9 +164,7 @@ class CreateTask extends StatelessWidget {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: _days
-                          .map((day) => CustomButton(day))
-                          .toList(),
+                      children: _days.map((day) => CustomButton(day)).toList(),
                     ),
                     SizedBox(
                       height: 20.0,
@@ -207,10 +205,13 @@ class CreateTask extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20.0),
                             border: Border.all(
                                 width: 2.0, color: Colors.grey[600])),
-                        child: Icon(
-                          Icons.close,
-                          size: 16.0,
-                          color: Colors.grey[600],
+                        child: GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(
+                            Icons.close,
+                            size: 16.0,
+                            color: Colors.grey[600],
+                          ),
                         ),
                       ),
                     )
@@ -220,5 +221,37 @@ class CreateTask extends StatelessWidget {
             ],
           ),
         ));
+  }
+}
+
+class CategoryChip extends StatefulWidget {
+  final String category;
+
+  CategoryChip(this.category);
+  @override
+  _CategoryChipState createState() => _CategoryChipState();
+}
+
+class _CategoryChipState extends State<CategoryChip> {
+  bool isActive = false;
+
+  Color _getColor(Color activeColor, Color inactiveColor) {
+    return isActive ? activeColor : inactiveColor;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomActionChip(
+      label: widget.category,
+      borderColor: _getColor(Colors.white, Colors.grey[600]),
+      backgroundColor: _getColor(Colors.white, Theme.of(context).primaryColor),
+      labelStyle: Theme.of(context).textTheme.body1.copyWith(
+          color: _getColor(Theme.of(context).primaryColor, Colors.grey[600])),
+      onPressed: () {
+        setState(() {
+          isActive = !isActive;
+        });
+      },
+    );
   }
 }

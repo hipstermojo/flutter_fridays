@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:tasktracker/screens/create_task.dart';
+import 'package:tasktracker/widgets/task_tile.dart';
 
 class ViewTasks extends StatelessWidget {
-  List<Icon> _navBarItems = [
-    Icon(Icons.home),
-    Icon(Icons.add_circle_outline),
-    Icon(Icons.calendar_today)
-  ];
+  final List<String> _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
-  List<String> months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-
-  Widget customDot = Container(
+  final Widget customDot = Container(
     height: 2.0,
     width: 2.0,
     decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
@@ -19,6 +15,7 @@ class ViewTasks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
           Expanded(
@@ -70,16 +67,17 @@ class ViewTasks extends StatelessWidget {
                                   margin: EdgeInsets.fromLTRB(
                                       40.0, 0.0, 40.0, 20.0),
                                   child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: months
-                                          .map((month) => Text(
-                                                month,
-                                                style: TextStyle(
-                                                    fontSize: 12.0,
-                                                    color: Colors.grey[600]),
-                                              ))
-                                          .toList()))
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: _months
+                                        .map((month) => Text(
+                                              month,
+                                              style: TextStyle(
+                                                  fontSize: 12.0,
+                                                  color: Colors.grey[600]),
+                                            ))
+                                        .toList(),
+                                  ))
                             ],
                           ),
                           Row(
@@ -148,7 +146,7 @@ class ViewTasks extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(top: 20.0, bottom: 10.0),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -167,6 +165,14 @@ class ViewTasks extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Expanded(
+                    child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: 4,
+                        itemBuilder: (BuildContext _, int index) {
+                          return TaskTile();
+                        }),
+                  )
                 ],
               )),
           Expanded(
@@ -175,7 +181,14 @@ class ViewTasks extends StatelessWidget {
               color: Colors.white,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: _navBarItems,
+                children: [
+                  Icon(Icons.home),
+                  GestureDetector(
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => CreateTask())),
+                      child: Icon(Icons.add_circle_outline)),
+                  Icon(Icons.calendar_today)
+                ],
               ),
             ),
           ),
