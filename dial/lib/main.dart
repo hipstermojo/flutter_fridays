@@ -15,8 +15,15 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final boldStyle = TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold);
+  var current = 2;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -36,7 +43,7 @@ class HomePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        "21 Days",
+                        "$current Days",
                         style: TextStyle(
                             color: Colors.green,
                             fontSize: 45.0,
@@ -95,7 +102,11 @@ class HomePage extends StatelessWidget {
           ],
         ),
         Expanded(
-          child: Dial()
+          child: Dial(from: 2,to: 25,onUpdate: (value){
+            setState(() {
+              current= value;
+            });
+          },),
         ),
         Container(
           height: 60.0,
