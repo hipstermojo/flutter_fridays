@@ -4,19 +4,22 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class Dial extends StatefulWidget {
+  final Function onUpdate;
+  final int from;
+  final int to;
+  Dial({this.onUpdate, this.from, this.to});
   @override
   _DialState createState() => _DialState();
 }
 
 class _DialState extends State<Dial> {
   int _current = 0;
-  static int _from = 2;
-  static int _to = 25;
   Offset startPoint = Offset.zero;
-  static double _angleDivision = 360 / (_to - _from + 1);
-  double angleDivisionRadians = (_angleDivision / 180 * pi);
+
   @override
   Widget build(BuildContext context) {
+    double _angleDivision = 360 / (widget.to - widget.from + 1);
+    double angleDivisionRadians = (_angleDivision / 180 * pi);
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
@@ -31,24 +34,35 @@ class _DialState extends State<Dial> {
                   onHorizontalDragUpdate: (details) {
                     Offset currentPoint = details.localPosition;
 
-
                     double angleTurned = _computeTurnAngle(
                         Offset(height / 2, height / 2),
                         startPoint,
                         currentPoint,
                         height / 2);
 
-                    if(angleTurned<0.0){
-                      print("Turned negative");
-                    }
                     setState(() {
                       if (angleTurned >= angleDivisionRadians) {
-                        _current = (_current + 1) % (_to - 1);
+                        if (_isClockwise(
+                            height, height, startPoint, currentPoint)) {
+                          _current = _current < widget.to - widget.from
+                              ? _current + 1
+                              : 0;
+                        } else {
+                          _current = _current > 0
+                              ? _current - 1
+                              : widget.to - widget.from;
+                        }
+                        if (_current == 0) {
+                          widget.onUpdate(widget.from);
+                        } else {
+                          widget.onUpdate(
+                              (widget.from + (widget.to - _current) - 1));
+                        }
+
                         startPoint = currentPoint;
                       }
                     });
                   },
-
                   child: Container(
                     height: height,
                     width: height,
@@ -56,13 +70,35 @@ class _DialState extends State<Dial> {
                   ),
                 ),
               ),
-              painter: DialFace(start: _from, stop: _to, current: _current),
+              painter: DialFace(
+                  start: widget.from, stop: widget.to, current: _current),
             ),
           ],
         );
       },
     );
   }
+}
+
+/// Determines if a rotation is clockwise
+bool _isClockwise(double height, double width, Offset start, Offset current) {
+  bool result;
+
+  /// Evaluate the left half
+  if (start.dx < width / 2 && current.dx < width / 2) {
+    if (start.dy < width / 2 && current.dy < width / 2) {
+      result = start.dx < current.dx && start.dy > current.dy;
+    } else {
+      result = start.dx > current.dx && start.dy > current.dy;
+    }
+  } else {
+    if (start.dy < width / 2 && current.dy < width / 2) {
+      result = start.dx < current.dx && start.dy < current.dy;
+    } else {
+      result = start.dx > current.dx && start.dy < current.dy;
+    }
+  }
+  return result;
 }
 
 /// Returns the angle in radians between two points in a circle
@@ -113,7 +149,7 @@ class DialFace extends CustomPainter {
   final stop;
   // The variable current is used to denote the currently marked number on the dial
   final current;
-  DialFace({this.start, this.stop, this.current = -2});
+  DialFace({this.start, this.stop, this.current});
   final Paint circlePainter = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.0
