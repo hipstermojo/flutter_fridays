@@ -1,3 +1,4 @@
+import 'package:dial/models/travel_stats.dart';
 import 'package:dial/widgets/Dial.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,12 @@ class _HomePageState extends State<HomePage>
   final boldStyle = TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold);
   var current = 2;
   double opacity = 1.0;
+  Stats stats;
+  @override
+  void initState() {
+    super.initState();
+    stats = stats = Stats(current);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +54,7 @@ class _HomePageState extends State<HomePage>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        "$current Days",
+                        "${stats.days} Days",
                         style: TextStyle(
                             color: Colors.green,
                             fontSize: 45.0,
@@ -70,7 +77,7 @@ class _HomePageState extends State<HomePage>
                     children: <Widget>[
                       Text("On average you need to ride"),
                       Text(
-                        "2 hours 10 minutes",
+                        "${stats.duration.inHours} hours ${stats.duration.inMinutes % 60} minutes",
                         style: boldStyle,
                       ),
                       SizedBox(
@@ -78,7 +85,7 @@ class _HomePageState extends State<HomePage>
                       ),
                       Text("On some days, you'll have to climb over"),
                       Text(
-                        "466 metres",
+                        "${stats.distance} metres",
                         style: boldStyle,
                       ),
                       SizedBox(
@@ -86,7 +93,7 @@ class _HomePageState extends State<HomePage>
                       ),
                       Text("The overall difficulty level is"),
                       Text(
-                        "Intermediate",
+                        "${stats.difficulty}",
                         style: boldStyle,
                       ),
                     ],
@@ -110,8 +117,9 @@ class _HomePageState extends State<HomePage>
                 opacity = 0.1;
               });
             },
-            onComplete: () {
+            onComplete: (newDay) {
               setState(() {
+                stats = Stats(newDay);
                 opacity = 1.0;
               });
             },

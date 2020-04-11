@@ -36,7 +36,7 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
           _controller.reset();
           setState(() {
             isAnimating = false;
-            widget.onComplete();
+            widget.onComplete(_getMarkedValue(_current, widget.from, widget.to));
           });
         }
       });
@@ -88,12 +88,7 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
                                 ? _current - 1
                                 : widget.to - widget.from;
                           }
-                          if (_current == 0) {
-                            widget.onUpdate(widget.from);
-                          } else {
-                            widget.onUpdate(
-                                (widget.from + (widget.to - _current) - 1));
-                          }
+                          widget.onUpdate(_getMarkedValue(_current, widget.from, widget.to));
                           startPoint = currentPoint;
                         }
                       });
@@ -130,6 +125,17 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
       },
     );
   }
+}
+
+int _getMarkedValue(int current, int from, int to){
+  int value;
+  if (current == 0) {
+    value = from;
+  } else {
+
+        value = from + (to - current) - 1;
+  }
+  return value;
 }
 
 /// Determines if a rotation is clockwise
