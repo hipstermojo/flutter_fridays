@@ -52,6 +52,7 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     double _angleDivision = 360 / (widget.to - widget.from + 1);
     double angleDivisionRadians = (_angleDivision / 180 * pi);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
@@ -107,7 +108,7 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
                     child: Container(
                       height: height,
                       width: height,
-                      color: Color(0x00000000),
+                      color: Colors.transparent,
                     ),
                   ),
                 ),
@@ -116,10 +117,11 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
                 return CustomPaint(
                   child: child,
                   painter: DialFace(
-                      start: widget.from,
-                      stop: widget.to,
-                      current: _current,
-                      animRatio: _animation.value),
+                    start: widget.from,
+                    stop: widget.to,
+                    current: _current,
+                    animRatio: _animation.value,
+                  ),
                 );
               },
             ),
@@ -200,7 +202,13 @@ class DialFace extends CustomPainter {
   // The variable current is used to denote the currently marked number on the dial
   final current;
   final animRatio;
-  DialFace({this.start, this.stop, this.current, this.animRatio});
+
+  DialFace({
+    this.start,
+    this.stop,
+    this.current,
+    this.animRatio,
+  });
   final Paint circlePainter = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.0
@@ -221,10 +229,12 @@ class DialFace extends CustomPainter {
     final radius = size.height / 2;
     final center = Offset(size.width / 2, size.height / 2);
     canvas.drawCircle(center, radius - 2, circlePainter);
+
     circlePainter..style = PaintingStyle.fill;
-    // TODO: Set coordinates for green circle to be consistent across screens
     canvas.drawCircle(center, 5.0, circlePainter);
     circlePainter..color = Colors.green;
+
+    // TODO: Set coordinates for green circle to be consistent across screens
     canvas.drawCircle(
         Offset(radius, size.height / 2), 0.1 * radius, circlePainter);
 
@@ -263,7 +273,7 @@ class DialFace extends CustomPainter {
     canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius - 25),
         pi * (1.5 + (4 * animRatio)),
-        pi * _getArcSweep(animRatio, 3/5),
+        pi * _getArcSweep(animRatio, 3 / 5),
         false,
         arcPainter);
   }
