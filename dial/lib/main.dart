@@ -20,18 +20,22 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   final boldStyle = TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold);
   var current = 2;
+  double opacity = 1.0;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Stack(
-          children: <Widget>[
-            Column(
+        Container(
+          child: AnimatedOpacity(
+            duration: Duration(milliseconds: 500),
+            opacity: opacity,
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
@@ -90,23 +94,28 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            Positioned(
-              top: 0.0,
-              bottom: 0.0,
-              left: 0.0,
-              right: 0.0,
-              child: Container(
-                color: Color(0xAAFFFFFF),
-              ),
-            ),
-          ],
+          ),
         ),
         Expanded(
-          child: Dial(from: 2,to: 25,onUpdate: (value){
-            setState(() {
-              current= value;
-            });
-          },),
+          child: Dial(
+            from: 2,
+            to: 25,
+            onUpdate: (value) {
+              setState(() {
+                current = value;
+              });
+            },
+            onStart: () {
+              setState(() {
+                opacity = 0.1;
+              });
+            },
+            onComplete: () {
+              setState(() {
+                opacity = 1.0;
+              });
+            },
+          ),
         ),
         Container(
           height: 60.0,

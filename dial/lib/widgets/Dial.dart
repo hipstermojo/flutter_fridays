@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 
 class Dial extends StatefulWidget {
   final Function onUpdate;
+  final Function onStart;
+  final Function onComplete;
+  // TODO: Change from using integers to using a "range" construct or enumeration
   final int from;
   final int to;
-  Dial({this.onUpdate, this.from, this.to});
+  Dial({this.onUpdate, this.from, this.to, this.onStart, this.onComplete});
   @override
   _DialState createState() => _DialState();
 }
@@ -24,18 +27,19 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(duration: _duration, vsync: this);
-    _animation = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(CurvedAnimation(parent: _controller, curve: Interval(delay,1.0,curve:Curves.easeInOutSine)))
-    ..addStatusListener((AnimationStatus status){
-      if(status == AnimationStatus.completed){
-        _controller.reset();
-        setState(() {
-          isAnimating = false;
-        });
-      }
-    });
+    _controller = AnimationController(duration: _duration, vsync: this);
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+        parent: _controller,
+        curve: Interval(delay, 1.0, curve: Curves.easeInOutSine)))
+      ..addStatusListener((AnimationStatus status) {
+        if (status == AnimationStatus.completed) {
+          _controller.reset();
+          setState(() {
+            isAnimating = false;
+            widget.onComplete();
+          });
+        }
+      });
   }
 
   @override
@@ -89,13 +93,13 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
                             widget.onUpdate(
                                 (widget.from + (widget.to - _current) - 1));
                           }
-
                           startPoint = currentPoint;
                         }
                       });
                     },
                     onHorizontalDragEnd: (_) {
                       _controller.forward();
+                      widget.onStart();
                       setState(() {
                         isAnimating = true;
                       });
