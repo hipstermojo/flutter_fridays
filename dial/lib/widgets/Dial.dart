@@ -19,6 +19,7 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
   Animation _animation;
   static final Duration _duration = Duration(milliseconds: 2000);
   final double delay = 500 / _duration.inMilliseconds;
+  bool isAnimating = false;
 
   @override
   void initState() {
@@ -30,6 +31,9 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
     ..addStatusListener((AnimationStatus status){
       if(status == AnimationStatus.completed){
         _controller.reset();
+        setState(() {
+          isAnimating = false;
+        });
       }
     });
   }
@@ -52,49 +56,55 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
             AnimatedBuilder(
               animation: _controller,
               child: Center(
-                child: GestureDetector(
-                  onHorizontalDragStart: (details) {
-                    startPoint = details.localPosition;
-                  },
-                  onHorizontalDragUpdate: (details) {
-                    Offset currentPoint = details.localPosition;
+                child: IgnorePointer(
+                  ignoring: isAnimating,
+                  child: GestureDetector(
+                    onHorizontalDragStart: (details) {
+                      startPoint = details.localPosition;
+                    },
+                    onHorizontalDragUpdate: (details) {
+                      Offset currentPoint = details.localPosition;
 
-                    double angleTurned = _computeTurnAngle(
-                        Offset(height / 2, height / 2),
-                        startPoint,
-                        currentPoint,
-                        height / 2);
+                      double angleTurned = _computeTurnAngle(
+                          Offset(height / 2, height / 2),
+                          startPoint,
+                          currentPoint,
+                          height / 2);
 
-                    setState(() {
-                      if (angleTurned >= angleDivisionRadians) {
-                        if (_isClockwise(
-                            height, height, startPoint, currentPoint)) {
-                          _current = _current < widget.to - widget.from
-                              ? _current + 1
-                              : 0;
-                        } else {
-                          _current = _current > 0
-                              ? _current - 1
-                              : widget.to - widget.from;
+                      setState(() {
+                        if (angleTurned >= angleDivisionRadians) {
+                          if (_isClockwise(
+                              height, height, startPoint, currentPoint)) {
+                            _current = _current < widget.to - widget.from
+                                ? _current + 1
+                                : 0;
+                          } else {
+                            _current = _current > 0
+                                ? _current - 1
+                                : widget.to - widget.from;
+                          }
+                          if (_current == 0) {
+                            widget.onUpdate(widget.from);
+                          } else {
+                            widget.onUpdate(
+                                (widget.from + (widget.to - _current) - 1));
+                          }
+
+                          startPoint = currentPoint;
                         }
-                        if (_current == 0) {
-                          widget.onUpdate(widget.from);
-                        } else {
-                          widget.onUpdate(
-                              (widget.from + (widget.to - _current) - 1));
-                        }
-
-                        startPoint = currentPoint;
-                      }
-                    });
-                  },
-                  onHorizontalDragEnd: (_) {
-                    _controller.forward();
-                  },
-                  child: Container(
-                    height: height,
-                    width: height,
-                    color: Color(0x00000000),
+                      });
+                    },
+                    onHorizontalDragEnd: (_) {
+                      _controller.forward();
+                      setState(() {
+                        isAnimating = true;
+                      });
+                    },
+                    child: Container(
+                      height: height,
+                      width: height,
+                      color: Color(0x00000000),
+                    ),
                   ),
                 ),
               ),
