@@ -23,10 +23,12 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
   static final Duration _duration = Duration(milliseconds: 2000);
   final double delay = 500 / _duration.inMilliseconds;
   bool isAnimating = false;
+  int _oldCurrent;
 
   @override
   void initState() {
     super.initState();
+    _oldCurrent = 0;
     _controller = AnimationController(duration: _duration, vsync: this);
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: _controller,
@@ -94,11 +96,14 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
                       });
                     },
                     onHorizontalDragEnd: (_) {
-                      _controller.forward();
-                      widget.onStart();
-                      setState(() {
-                        isAnimating = true;
-                      });
+                      if(_oldCurrent!=_current) {
+                        _controller.forward();
+                        widget.onStart();
+                        setState(() {
+                          isAnimating = true;
+                          _oldCurrent = _current;
+                        });
+                      }
                     },
                     child: Container(
                       height: height,
