@@ -12,9 +12,33 @@ class Dial extends StatefulWidget {
   _DialState createState() => _DialState();
 }
 
-class _DialState extends State<Dial> {
+class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
   int _current = 0;
   Offset startPoint = Offset.zero;
+  AnimationController _controller;
+  Animation _animation;
+  static final Duration _duration = Duration(milliseconds: 2000);
+  final double delay = 500 / _duration.inMilliseconds;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        AnimationController(duration: _duration, vsync: this);
+    _animation = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: _controller, curve: Interval(delay,1.0,curve:Curves.easeInOutSine)))
+    ..addStatusListener((AnimationStatus status){
+      if(status == AnimationStatus.completed){
+        _controller.reset();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +49,8 @@ class _DialState extends State<Dial> {
         final height = constraints.maxHeight;
         return Stack(
           children: <Widget>[
-            CustomPaint(
+            AnimatedBuilder(
+              animation: _controller,
               child: Center(
                 child: GestureDetector(
                   onHorizontalDragStart: (details) {
@@ -63,6 +88,9 @@ class _DialState extends State<Dial> {
                       }
                     });
                   },
+                  onHorizontalDragEnd: (_) {
+                    _controller.forward();
+                  },
                   child: Container(
                     height: height,
                     width: height,
@@ -70,8 +98,16 @@ class _DialState extends State<Dial> {
                   ),
                 ),
               ),
-              painter: DialFace(
-                  start: widget.from, stop: widget.to, current: _current),
+              builder: (context, child) {
+                return CustomPaint(
+                  child: child,
+                  painter: DialFace(
+                      start: widget.from,
+                      stop: widget.to,
+                      current: _current,
+                      animRatio: _animation.value),
+                );
+              },
             ),
           ],
         );
@@ -149,7 +185,8 @@ class DialFace extends CustomPainter {
   final stop;
   // The variable current is used to denote the currently marked number on the dial
   final current;
-  DialFace({this.start, this.stop, this.current});
+  final animRatio;
+  DialFace({this.start, this.stop, this.current, this.animRatio});
   final Paint circlePainter = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.0
@@ -158,6 +195,12 @@ class DialFace extends CustomPainter {
 
   final TextPainter textPainter = TextPainter()
     ..textDirection = TextDirection.ltr;
+
+  final Paint arcPainter = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2.0
+    ..color = Colors.grey
+    ..strokeCap = StrokeCap.round;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -196,16 +239,40 @@ class DialFace extends CustomPainter {
       textPainter.paint(
           canvas,
           Offset(
-              (textPainter.height / 2) + padding, (textPainter.height / 2) - 10)
-          // Adjust the text to aligned with the green marker
-          );
+              // Adjust the text to aligned with the green marker
+              (textPainter.height / 2) + padding,
+              (textPainter.height / 2) - 10));
 
       canvas.restore();
     }
+
+    canvas.drawArc(
+        Rect.fromCircle(center: center, radius: radius - 25),
+        pi * (1.5 + (4 * animRatio)),
+        pi * _getArcSweep(animRatio, 3/5),
+        false,
+        arcPainter);
+  }
+
+  /// timeRatio refers to the ratio of the timeline elapsed.
+  /// maxArcRatio refers to the ratio of the arc at its longest relative to its
+  /// circle.
+  /// Returns the ratio of the sweep angle of the arc. Specifically,
+  /// it works by increasing the size of the angle in the first quarter of an
+  /// animation timeline and decreasing the size of the angle in the last quarter
+  /// of an animation timeline. The rest of the time, the arc remains the size.
+  double _getArcSweep(double timeRatio, double maxArcRatio) {
+    double length = maxArcRatio;
+    if (timeRatio <= 0.25) {
+      length = timeRatio / 0.25 * maxArcRatio;
+    } else if (timeRatio >= 0.75) {
+      length = (1 - timeRatio) / 0.25 * maxArcRatio;
+    }
+    return length;
   }
 
   @override
   bool shouldRepaint(DialFace oldDelegate) {
-    return oldDelegate.current != current;
+    return oldDelegate.current != current || oldDelegate.animRatio != animRatio;
   }
 }
