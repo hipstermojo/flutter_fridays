@@ -215,6 +215,10 @@ class DialFace extends CustomPainter {
     ..color = Colors.black
     ..isAntiAlias = true;
 
+  final Paint dialMarkPainter = Paint()
+    ..style = PaintingStyle.fill
+    ..color = Colors.green;
+
   final TextPainter textPainter = TextPainter()
     ..textDirection = TextDirection.ltr;
 
@@ -232,11 +236,11 @@ class DialFace extends CustomPainter {
 
     circlePainter..style = PaintingStyle.fill;
     canvas.drawCircle(center, 5.0, circlePainter);
-    circlePainter..color = Colors.green;
+    circlePainter..style = PaintingStyle.stroke;
 
     // TODO: Set coordinates for green circle to be consistent across screens
     canvas.drawCircle(
-        Offset(radius, size.height / 2), 0.1 * radius, circlePainter);
+        Offset(radius, size.height / 2), 0.1 * radius, dialMarkPainter);
 
     var count = stop - start + 1;
     var padding = 5;
