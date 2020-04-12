@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage>
                 SizedBox(
                   height: 3.0,
                 ),
-                Text("45h 42m"),
+                Text("${Stats.TOTAL_DURATION.inHours}h ${Stats.TOTAL_DURATION.inMinutes%60}m"),
               ]),
               Column(
                 children: <Widget>[
@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage>
                   SizedBox(
                     height: 3.0,
                   ),
-                  Text("9780m")
+                  Text("${Stats.ASCENT}m")
                 ],
               ),
               Column(
