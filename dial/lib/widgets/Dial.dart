@@ -38,7 +38,8 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
           _controller.reset();
           setState(() {
             isAnimating = false;
-            widget.onComplete(_getMarkedValue(_current, widget.from, widget.to));
+            widget
+                .onComplete(_getMarkedValue(_current, widget.from, widget.to));
           });
         }
       });
@@ -58,87 +59,83 @@ class _DialState extends State<Dial> with SingleTickerProviderStateMixin {
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
-        return Stack(
-          children: <Widget>[
-            AnimatedBuilder(
-              animation: _controller,
-              child: Center(
-                child: IgnorePointer(
-                  ignoring: isAnimating,
-                  child: GestureDetector(
-                    onHorizontalDragStart: (details) {
-                      startPoint = details.localPosition;
-                    },
-                    onHorizontalDragUpdate: (details) {
-                      Offset currentPoint = details.localPosition;
+        return AnimatedBuilder(
+          animation: _controller,
+          child: Center(
+            child: IgnorePointer(
+              ignoring: isAnimating,
+              child: GestureDetector(
+                onHorizontalDragStart: (details) {
+                  startPoint = details.localPosition;
+                },
+                onHorizontalDragUpdate: (details) {
+                  Offset currentPoint = details.localPosition;
 
-                      double angleTurned = _computeTurnAngle(
-                          Offset(height / 2, height / 2),
-                          startPoint,
-                          currentPoint,
-                          height / 2);
+                  double angleTurned = _computeTurnAngle(
+                      Offset(height / 2, height / 2),
+                      startPoint,
+                      currentPoint,
+                      height / 2);
 
-                      setState(() {
-                        if (angleTurned >= angleDivisionRadians) {
-                          if (_isClockwise(
-                              height, height, startPoint, currentPoint)) {
-                            _current = _current < widget.to - widget.from
-                                ? _current + 1
-                                : 0;
-                          } else {
-                            _current = _current > 0
-                                ? _current - 1
-                                : widget.to - widget.from;
-                          }
-                          widget.onUpdate(_getMarkedValue(_current, widget.from, widget.to));
-                          startPoint = currentPoint;
-                        }
-                      });
-                    },
-                    onHorizontalDragEnd: (_) {
-                      if(_oldCurrent!=_current) {
-                        _controller.forward();
-                        widget.onStart();
-                        setState(() {
-                          isAnimating = true;
-                          _oldCurrent = _current;
-                        });
+                  setState(() {
+                    if (angleTurned >= angleDivisionRadians) {
+                      if (_isClockwise(
+                          height, height, startPoint, currentPoint)) {
+                        _current = _current < widget.to - widget.from
+                            ? _current + 1
+                            : 0;
+                      } else {
+                        _current = _current > 0
+                            ? _current - 1
+                            : widget.to - widget.from;
                       }
-                    },
-                    child: Container(
-                      height: height,
-                      width: height,
-                      color: Colors.transparent,
-                    ),
-                  ),
+                      widget.onUpdate(
+                          _getMarkedValue(_current, widget.from, widget.to));
+                      startPoint = currentPoint;
+                    }
+                  });
+                },
+                onHorizontalDragEnd: (_) {
+                  if (_oldCurrent != _current) {
+                    _controller.forward();
+                    widget.onStart();
+                    setState(() {
+                      isAnimating = true;
+                      _oldCurrent = _current;
+                    });
+                  }
+                },
+                child: Container(
+                  height: height,
+                  width: height,
+                  color: Colors.transparent,
                 ),
               ),
-              builder: (context, child) {
-                return CustomPaint(
-                  child: child,
-                  painter: DialFace(
-                    start: widget.from,
-                    stop: widget.to,
-                    current: _current,
-                    animRatio: _animation.value,
-                  ),
-                );
-              },
             ),
-          ],
+          ),
+          builder: (context, child) {
+            return CustomPaint(
+              child: child,
+              painter: DialFace(
+                start: widget.from,
+                stop: widget.to,
+                current: _current,
+                animRatio: _animation.value,
+              ),
+            );
+          },
         );
       },
     );
   }
 }
 
-int _getMarkedValue(int current, int from, int to){
+int _getMarkedValue(int current, int from, int to) {
   int value;
   if (current == 0) {
     value = from;
   } else {
-
-        value = from + (to - current) - 1;
+    value = from + (to - current) - 1;
   }
   return value;
 }

@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        "${stats.days} Days",
+                        "$current Days",
                         style: TextStyle(
                             color: Colors.green,
                             fontSize: 45.0,
