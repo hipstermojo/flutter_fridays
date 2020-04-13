@@ -225,7 +225,8 @@ class DialFace extends CustomPainter {
 
   final Paint dialMarkPainter = Paint()
     ..style = PaintingStyle.fill
-    ..color = Colors.green;
+    ..color = Colors.green
+    ..strokeWidth = 0.5;
 
   final TextPainter textPainter = TextPainter()
     ..textDirection = TextDirection.ltr;
@@ -238,28 +239,26 @@ class DialFace extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final radius = size.height / 2;
+    final radius = min(size.width, size.height) / 2;
     final center = Offset(size.width / 2, size.height / 2);
+    final fontSize = radius > 150 ? 13.0 : 10.0;
+    double distanceToBorder = center.dx - radius;
     canvas.drawCircle(center, radius - 2, circlePainter);
 
     circlePainter..style = PaintingStyle.fill;
     canvas.drawCircle(center, 5.0, circlePainter);
     circlePainter..style = PaintingStyle.stroke;
 
-    // TODO: Set coordinates for green circle to be consistent across screens
-    canvas.drawCircle(
-        Offset(radius, size.height / 2), 0.1 * radius, dialMarkPainter);
-
     var count = stop - start + 1;
     var padding = 5;
+    double centerOffset = ((size.height - size.width) / 2).abs();
     for (var i = 0; i < count; i++) {
       canvas.save();
       // Angle is given in radians
       var angle = 2 * pi * (i + current) / count;
       textPainter.text = new TextSpan(
           text: (start + i).toString(),
-          style: TextStyle(color: Colors.black, fontSize: 10.0));
-      var distanceToBorder = (size.width - size.height) / 2;
+          style: TextStyle(color: Colors.black, fontSize: fontSize));
 
       // Translate plots where to place the text using coordinates x and y given
       // x = radius + radius * cos(theta), y = radius + radius * sin(theta),
@@ -267,8 +266,13 @@ class DialFace extends CustomPainter {
       // the right (at the 3 o' clock hour hand) which is not what this dial
       // should look like. Therefore to have it draw from the 9 o' clock hour
       // hand, cos(theta) becomes -cos(theta) and sin(theta) becomes -sin(theta)
-      canvas.translate(radius + radius * -cos(angle) + distanceToBorder,
-          radius + radius * -sin(angle));
+      canvas.translate(
+          radius +
+              radius * -cos(angle) +
+              (size.width > size.height ? centerOffset : 0),
+          radius +
+              radius * -sin(angle) +
+              (size.height > size.width ? centerOffset : 0));
       // Rotate the canvas which then rotates the text that will be drawn
       canvas.rotate(angle);
       textPainter.layout();
@@ -282,8 +286,35 @@ class DialFace extends CustomPainter {
       canvas.restore();
     }
 
+    canvas.drawCircle(
+        Offset(
+            distanceToBorder +
+                (textPainter.width * 2) +
+                (2 * padding) +
+                (0.1 * radius),
+            center.dy),
+        0.1 * radius,
+        dialMarkPainter);
+    dialMarkPainter
+      ..style = PaintingStyle.stroke
+      ..color = Colors.black;
+    canvas.drawCircle(
+        Offset(
+            distanceToBorder +
+                (textPainter.width * 2) +
+                (2 * padding) +
+                (0.1 * radius),
+            center.dy),
+        0.1 * radius,
+        dialMarkPainter);
+    dialMarkPainter
+      ..style = PaintingStyle.fill
+      ..color = Colors.green;
+
     canvas.drawArc(
-        Rect.fromCircle(center: center, radius: radius - 25),
+        Rect.fromCircle(
+            center: center,
+            radius: radius - (textPainter.width * 2) - (padding)),
         pi * (1.5 + (4 * animRatio)),
         pi * _getArcSweep(animRatio, 3 / 5),
         false,
