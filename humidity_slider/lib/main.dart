@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:humidity_slider/widgets/bottom_nav.dart';
+import 'package:humidity_slider/widgets/reading_summary.dart';
 
 void main() {
   runApp(Home());
@@ -17,6 +18,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "Humidity Slider",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           fontFamily: "Montserrat",
@@ -68,7 +70,10 @@ class Home extends StatelessWidget {
                     flex: 1,
                   ),
                   Expanded(
-                    child: Container(),
+                    child: Container(
+                      margin: EdgeInsets.only(right: 20.0),
+                      child: ReadingSummary(),
+                    ),
                     flex: 2,
                   ),
                 ],
