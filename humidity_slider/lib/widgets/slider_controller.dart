@@ -28,7 +28,9 @@ class _SliderControllerState extends State<SliderController> {
             height: constraints.maxHeight,
             width: constraints.maxWidth,
             child: CustomPaint(
-              painter: LinePainter(),
+              painter: LinePainter(
+                  controllerPos: Offset(xPos, lowerBound - yPos),
+                  controllerRadius: controllerRadius),
             ),
           ),
           Positioned(
@@ -60,20 +62,44 @@ class _SliderControllerState extends State<SliderController> {
 }
 
 class LinePainter extends CustomPainter {
+  LinePainter({this.controllerPos, this.controllerRadius});
+
+  final Offset controllerPos;
+  final double controllerRadius;
   static const Color _redGradient = Color(0xff560920);
+  static const Color _blueGradient = Color(0xff2b6799);
+  static const double curveMargin = 10.0;
   @override
   void paint(Canvas canvas, Size size) {
     final double midX = size.width / 2;
-    final Paint linePaint = Paint()
-      ..color = _redGradient
-      ..style = PaintingStyle.fill
-      ..strokeWidth = 3.0;
+    final Paint linePainter = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          _redGradient,
+          _blueGradient,
+          _redGradient,
+        ],
+        stops: [0.2, 0.6, 1.0],
+      ).createShader(Rect.fromCenter(
+          center: Offset(size.width / 2, size.height / 2),
+          height: size.height,
+          width: 5.0))
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 5.0;
 
-    canvas.drawLine(Offset(midX, 0), Offset(midX, size.height), linePaint);
+    canvas.drawLine(
+        Offset(midX, 0),
+        Offset(midX, controllerPos.dy - controllerRadius - curveMargin * 2),
+        linePainter);
+
+    canvas.drawLine(Offset(midX, controllerPos.dy + controllerRadius),
+        Offset(midX, size.height), linePainter);
   }
 
   @override
   bool shouldRepaint(LinePainter oldDelegate) {
-    return false;
+    return controllerPos != oldDelegate.controllerPos;
   }
 }
