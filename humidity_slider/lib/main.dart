@@ -10,7 +10,6 @@ void main() {
 }
 
 class Home extends StatelessWidget {
-  final Color redGradient = Color(0xff560920);
   final Color blueGradient = Color(0xff2b6799);
   final Color backgroundColor = Color(0xff173051);
 

@@ -24,6 +24,13 @@ class _SliderControllerState extends State<SliderController> {
           constraints.maxHeight - bottomMargin + controllerRadius;
       return Stack(
         children: <Widget>[
+          Container(
+            height: constraints.maxHeight,
+            width: constraints.maxWidth,
+            child: CustomPaint(
+              painter: LinePainter(),
+            ),
+          ),
           Positioned(
             right: xPos,
             bottom: yPos,
@@ -49,5 +56,24 @@ class _SliderControllerState extends State<SliderController> {
         ],
       );
     });
+  }
+}
+
+class LinePainter extends CustomPainter {
+  static const Color _redGradient = Color(0xff560920);
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double midX = size.width / 2;
+    final Paint linePaint = Paint()
+      ..color = _redGradient
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 3.0;
+
+    canvas.drawLine(Offset(midX, 0), Offset(midX, size.height), linePaint);
+  }
+
+  @override
+  bool shouldRepaint(LinePainter oldDelegate) {
+    return false;
   }
 }
