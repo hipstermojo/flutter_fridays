@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:humidity_slider/widgets/bottom_nav.dart';
 import 'package:humidity_slider/widgets/reading_summary.dart';
+import 'package:humidity_slider/widgets/readings.dart';
 import 'package:humidity_slider/widgets/slider_controller.dart';
 
 void main() {
@@ -13,9 +14,6 @@ class Home extends StatelessWidget {
   final Color blueGradient = Color(0xff2b6799);
   final Color backgroundColor = Color(0xff173051);
 
-  final List<String> readings = [0, 10, 25, 30, 35, 40, 45, 50, 75, 100]
-      .map((reading) => reading.toString() + "%")
-      .toList();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,39 +33,7 @@ class Home extends StatelessWidget {
                       child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: Container(
-                      alignment: Alignment.bottomCenter,
-                      margin: EdgeInsets.only(bottom: 30.0),
-                      child: FractionallySizedBox(
-                        heightFactor: 0.85,
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: readings
-                                .map((reading) => Container(
-                                      child: Row(
-                                        children: <Widget>[
-                                          Container(
-                                              margin: EdgeInsets.only(
-                                                  left: 10.0, right: 5.0),
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.yellow),
-                                              height: 4.0,
-                                              width: 4.0),
-                                          Text(
-                                            reading,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ))
-                                .toList()
-                                .reversed
-                                .toList()),
-                      ),
-                    ),
+                    child: Readings(),
                     flex: 1,
                   ),
                   Expanded(

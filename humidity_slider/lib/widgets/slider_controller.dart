@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:humidity_slider/widgets/readings.dart';
 
 class SliderController extends StatefulWidget {
   const SliderController({
@@ -11,8 +12,8 @@ class SliderController extends StatefulWidget {
 
 class _SliderControllerState extends State<SliderController> {
   static const double controllerRadius = 20.0;
-  double yPos = 30.0 - controllerRadius;
-  double bottomMargin = 30.0;
+  double yPos = Readings.BOTTOM_MARGIN - controllerRadius;
+  double bottomMargin = Readings.BOTTOM_MARGIN;
 
   @override
   Widget build(BuildContext context) {
