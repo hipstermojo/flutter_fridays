@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:humidity_slider/widgets/bottom_nav.dart';
 import 'package:humidity_slider/widgets/reading_summary.dart';
+import 'package:humidity_slider/widgets/slider_controller.dart';
 
 void main() {
   runApp(Home());
@@ -66,15 +67,15 @@ class Home extends StatelessWidget {
                     flex: 1,
                   ),
                   Expanded(
-                    child: Container(),
-                    flex: 1,
+                    child: SliderController(),
+                    flex: 2,
                   ),
                   Expanded(
                     child: Container(
                       margin: EdgeInsets.only(right: 20.0),
                       child: ReadingSummary(),
                     ),
-                    flex: 2,
+                    flex: 3,
                   ),
                 ],
               ))),

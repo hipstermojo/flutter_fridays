@@ -49,7 +49,7 @@ class ReadingSummary extends StatelessWidget {
         ),
         Text(
           "37%",
-          style: boldTextStyle.copyWith(fontSize: 40.0),
+          style: boldTextStyle.copyWith(fontSize: 60.0),
         ),
         SizedBox(
           height: largeMargin,
