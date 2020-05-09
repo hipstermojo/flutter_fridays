@@ -10,33 +10,34 @@ class SliderController extends StatefulWidget {
 }
 
 class _SliderControllerState extends State<SliderController> {
-  double yPos = 10.0;
+  static const double controllerRadius = 20.0;
+  double yPos = 30.0 - controllerRadius;
+  double bottomMargin = 30.0;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
+      final xPos = constraints.maxWidth * 0.2;
+      double upperBound = (constraints.maxHeight * 0.15) + controllerRadius;
+      double lowerBound =
+          constraints.maxHeight - bottomMargin + controllerRadius;
       return Stack(
         children: <Widget>[
-          Container(
-            height: constraints.maxHeight,
-          ),
           Positioned(
-            right: 15,
+            right: xPos,
             bottom: yPos,
             child: GestureDetector(
               onVerticalDragUpdate: (DragUpdateDetails details) {
-                if (details.globalPosition.dy > 50.0 &&
-                    details.globalPosition.dy <
-                        (constraints.maxHeight - 25.0)) {
+                if (details.globalPosition.dy > upperBound &&
+                    details.globalPosition.dy < lowerBound) {
                   setState(() {
                     yPos -= details.delta.dy;
                   });
                 }
               },
-              child: Container(
-                height: 35.0,
-                width: 35.0,
-                decoration:
-                    BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+              child: CircleAvatar(
+                radius: controllerRadius,
+                backgroundColor: Colors.white,
                 child: Icon(
                   Icons.unfold_more,
                   color: Colors.black,

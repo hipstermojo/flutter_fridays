@@ -36,33 +36,37 @@ class Home extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Container(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: readings
-                              .map((reading) => Container(
-                                    margin: EdgeInsets.only(bottom: 25.0),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Container(
-                                            margin: EdgeInsets.only(
-                                                left: 10.0, right: 5.0),
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.yellow),
-                                            height: 4.0,
-                                            width: 4.0),
-                                        Text(
-                                          reading,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
-                                  ))
-                              .toList()
-                              .reversed
-                              .toList()),
+                      alignment: Alignment.bottomCenter,
+                      margin: EdgeInsets.only(bottom: 30.0),
+                      child: FractionallySizedBox(
+                        heightFactor: 0.85,
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: readings
+                                .map((reading) => Container(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Container(
+                                              margin: EdgeInsets.only(
+                                                  left: 10.0, right: 5.0),
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.yellow),
+                                              height: 4.0,
+                                              width: 4.0),
+                                          Text(
+                                            reading,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ))
+                                .toList()
+                                .reversed
+                                .toList()),
+                      ),
                     ),
                     flex: 1,
                   ),
