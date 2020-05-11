@@ -1,16 +1,11 @@
 # dial
 
-A Flutter app of a Dribbble design
+A Flutter app remake of [this](https://dribbble.com/shots/10853311-Multi-day-calculator) Dribbble design
+by Dmytro Prudnikov of a Multi-day calculator
 
-## Getting Started
+> I am **not** affiliated with the creator of this design.
 
-This project is a starting point for a Flutter application.
+The original video of the prototype is [here](https://cdn.dribbble.com/users/125056/screenshots/10853311/media/15e7ea3758300f0bb6f3969f645b63ee.mp4).
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Demo
+<img src="./example/demo.gif" width="400px">
