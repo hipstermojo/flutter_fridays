@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               ClipPath(
-                clipper: CardClipper(edgeSize: clipSize),
+                clipper: CardClipper(
+                    startOffset: Offset(width - clipSize, 0),
+                    endOffset: Offset(width, clipSize)),
                 child: Container(
                   decoration: BoxDecoration(
                       color: Colors.pinkAccent,
@@ -52,7 +54,9 @@ class MyApp extends StatelessWidget {
                 child: Transform.rotate(
                   angle: 0,
                   child: ClipPath(
-                    clipper: CardClipper(edgeSize: clipSize, clipReverse: true),
+                    clipper: CardClipper(
+                        startOffset: Offset(0, height - clipSize),
+                        endOffset: Offset(clipSize, height)),
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.pink,
@@ -73,37 +77,32 @@ class MyApp extends StatelessWidget {
 }
 
 class CardClipper extends CustomClipper<Path> {
-  /// A custom clipper that cuts the card edge. [edgeSize] refers the size of
-  /// the diagonal cut on the card. [clipReverse] is used to determine if the
-  /// clipping starts from the top right to the bottom left (the default behaviour)
-  /// or when set to [true] clips from the bottom left towards the top right
-  CardClipper({@required this.edgeSize, this.clipReverse = false});
-  final double edgeSize;
-  final bool clipReverse;
+  /// A custom clipper that cuts the card edge. [startOffset] is an Offset
+  /// of the start of the edge and [endOffset] is an Offset of the end of
+  /// the edge. The cut edge runs diagonally from the top left to the bottom
+  /// right
+  CardClipper({@required this.startOffset, @required this.endOffset});
+
+  Offset startOffset;
+  final Offset endOffset;
   @override
   Path getClip(Size size) {
     Path path = Path();
-    if (clipReverse) {
-      path
-        ..lineTo(0.0, size.height)
-        ..lineTo(edgeSize, size.height)
-        ..lineTo(0.0, size.height - edgeSize);
-    } else {
-      path
-        //Top left
-        ..lineTo(0.0, 0.0)
-        // Bottom left
-        ..lineTo(0.0, size.height)
-        // Bottom right
-        ..lineTo(size.width, size.height)
-        // Top Right
-        ..lineTo(size.width, edgeSize)
-        ..lineTo(size.width - edgeSize, 0.0)
-        ..close();
-    }
+    // Bottom left
+    path..moveTo(0.0, size.height);
+    //Top left
+    path..lineTo(0.0, startOffset.dy);
+    // Top Right
+    path..lineTo(startOffset.dx, startOffset.dy);
+    path..lineTo(endOffset.dx, endOffset.dy);
+    // Bottom right
+    path..lineTo(size.width, size.height);
+
     return path;
   }
 
   @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
+  bool shouldReclip(CardClipper oldClipper) =>
+      oldClipper.startOffset != startOffset ||
+      oldClipper.endOffset != endOffset;
 }
