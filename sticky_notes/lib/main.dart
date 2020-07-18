@@ -7,7 +7,7 @@ void main() {
 class MyApp extends StatelessWidget {
   final double height = 400;
   final double width = 300;
-  final double clipSize = 100;
+  final double clipSize = 20;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class FoldableCard extends StatelessWidget {
+class FoldableCard extends StatefulWidget {
   const FoldableCard({
     Key key,
     @required this.width,
@@ -40,21 +40,37 @@ class FoldableCard extends StatelessWidget {
   final double height;
 
   @override
+  _FoldableCardState createState() => _FoldableCardState();
+}
+
+class _FoldableCardState extends State<FoldableCard> {
+  double rightPos;
+  double topPos;
+  @override
+  void initState() {
+    super.initState();
+    rightPos = -widget.width + widget.clipSize;
+    topPos = -widget.height + widget.clipSize;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final double MAX_TOP = -widget.height + widget.clipSize;
+    final double MAX_RIGHT = -widget.width + widget.clipSize;
     return Stack(
       overflow: Overflow.visible,
       alignment: Alignment.center,
       children: [
         ClipPath(
           clipper: CardClipper(
-              startOffset: Offset(width - clipSize, 0),
-              endOffset: Offset(width, clipSize)),
+              startOffset: Offset(widget.width - widget.clipSize, 0),
+              endOffset: Offset(widget.width, widget.clipSize)),
           child: Container(
             decoration: BoxDecoration(
                 color: Colors.pinkAccent,
                 borderRadius: BorderRadius.circular(10.0)),
-            height: height,
-            width: width,
+            height: widget.height,
+            width: widget.width,
             alignment: Alignment.center,
             child: Container(
               padding: EdgeInsets.all(10.0),
@@ -67,21 +83,41 @@ class FoldableCard extends StatelessWidget {
           ),
         ),
         Positioned(
-          right: -width + clipSize,
-          top: -height + clipSize,
+          right: rightPos,
+          top: topPos,
           child: Transform.rotate(
             angle: 0,
             child: ClipPath(
               clipper: CardClipper(
-                  startOffset: Offset(0, height - clipSize),
-                  endOffset: Offset(clipSize, height)),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.pink,
-                    borderRadius: BorderRadius.circular(10.0)),
-                height: height,
-                width: width,
-                child: Text("Some text"),
+                  startOffset: Offset(0, widget.height - widget.clipSize),
+                  endOffset: Offset(widget.clipSize, widget.height)),
+              child: GestureDetector(
+                onVerticalDragStart: (DragStartDetails details) {},
+                onVerticalDragUpdate: (DragUpdateDetails details) {
+                  setState(() {
+                    if (-widget.width - details.localPosition.dx >= MAX_RIGHT) {
+                      rightPos = -widget.width - details.localPosition.dx;
+                    }
+                    if (-(widget.height * 2) + details.localPosition.dy >=
+                        MAX_TOP) {
+                      topPos = -(widget.height * 2) + details.localPosition.dy;
+                    }
+                  });
+                },
+                onVerticalDragEnd: (DragEndDetails details) {
+                  setState(() {
+                    rightPos = MAX_RIGHT;
+                    topPos = MAX_TOP;
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.pink,
+                      borderRadius: BorderRadius.circular(10.0)),
+                  height: widget.height,
+                  width: widget.width,
+                  child: Text("Some text"),
+                ),
               ),
             ),
           ),
