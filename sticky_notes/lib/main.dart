@@ -46,11 +46,19 @@ class FoldableCard extends StatefulWidget {
 class _FoldableCardState extends State<FoldableCard> {
   double rightPos;
   double topPos;
+  Offset cardStartOffset;
+  Offset cardEndOffset;
+  Offset foldStartOffset;
+  Offset foldEndOffset;
   @override
   void initState() {
     super.initState();
     rightPos = -widget.width + widget.clipSize;
     topPos = -widget.height + widget.clipSize;
+    cardStartOffset = Offset(widget.width - widget.clipSize, 0);
+    cardEndOffset = Offset(widget.width, widget.clipSize);
+    foldStartOffset = Offset(0, widget.height - widget.clipSize);
+    foldEndOffset = Offset(widget.clipSize, widget.height);
   }
 
   @override
@@ -63,8 +71,7 @@ class _FoldableCardState extends State<FoldableCard> {
       children: [
         ClipPath(
           clipper: CardClipper(
-              startOffset: Offset(widget.width - widget.clipSize, 0),
-              endOffset: Offset(widget.width, widget.clipSize)),
+              startOffset: cardStartOffset, endOffset: cardEndOffset),
           child: Container(
             decoration: BoxDecoration(
                 color: Colors.pinkAccent,
@@ -89,25 +96,35 @@ class _FoldableCardState extends State<FoldableCard> {
             angle: 0,
             child: ClipPath(
               clipper: CardClipper(
-                  startOffset: Offset(0, widget.height - widget.clipSize),
-                  endOffset: Offset(widget.clipSize, widget.height)),
+                  startOffset: foldStartOffset, endOffset: foldEndOffset),
               child: GestureDetector(
                 onVerticalDragStart: (DragStartDetails details) {},
                 onVerticalDragUpdate: (DragUpdateDetails details) {
-                  setState(() {
-                    if (-widget.width - details.localPosition.dx >= MAX_RIGHT) {
+                  if (-widget.width - details.localPosition.dx >= MAX_RIGHT ||
+                      -(widget.height * 2) + details.localPosition.dy >=
+                          MAX_TOP) {
+                    setState(() {
                       rightPos = -widget.width - details.localPosition.dx;
-                    }
-                    if (-(widget.height * 2) + details.localPosition.dy >=
-                        MAX_TOP) {
                       topPos = -(widget.height * 2) + details.localPosition.dy;
-                    }
-                  });
+                      cardStartOffset =
+                          Offset(widget.width + details.localPosition.dx, 0);
+                      cardEndOffset = Offset(widget.width,
+                          details.localPosition.dy - widget.height);
+                      foldStartOffset = Offset(0, -topPos);
+                      foldEndOffset =
+                          Offset(-details.localPosition.dx, widget.height);
+                    });
+                  }
                 },
                 onVerticalDragEnd: (DragEndDetails details) {
                   setState(() {
                     rightPos = MAX_RIGHT;
                     topPos = MAX_TOP;
+                    cardStartOffset = Offset(widget.width - widget.clipSize, 0);
+                    cardEndOffset = Offset(widget.width, widget.clipSize);
+                    foldStartOffset =
+                        Offset(0, widget.height - widget.clipSize);
+                    foldEndOffset = Offset(widget.clipSize, widget.height);
                   });
                 },
                 child: Container(
