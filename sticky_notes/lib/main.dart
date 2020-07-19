@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
+const PIVOT_ANGLE = (45 * pi) / 180;
 void main() {
   runApp(MyApp());
 }
@@ -50,6 +53,7 @@ class _FoldableCardState extends State<FoldableCard> {
   Offset cardEndOffset;
   Offset foldStartOffset;
   Offset foldEndOffset;
+  double angle;
   @override
   void initState() {
     super.initState();
@@ -59,6 +63,7 @@ class _FoldableCardState extends State<FoldableCard> {
     cardEndOffset = Offset(widget.width, widget.clipSize);
     foldStartOffset = Offset(0, widget.height - widget.clipSize);
     foldEndOffset = Offset(widget.clipSize, widget.height);
+    angle = 0;
   }
 
   @override
@@ -93,17 +98,23 @@ class _FoldableCardState extends State<FoldableCard> {
           right: rightPos,
           top: topPos,
           child: Transform.rotate(
-            angle: 0,
+            alignment: Alignment.bottomLeft,
+            angle: angle,
             child: ClipPath(
               clipper: CardClipper(
                   startOffset: foldStartOffset, endOffset: foldEndOffset),
               child: GestureDetector(
                 onVerticalDragStart: (DragStartDetails details) {},
                 onVerticalDragUpdate: (DragUpdateDetails details) {
+                  // TODO: Fix the issue of getting 90 as the angle of displacement
+                  double width = 0 - details.localPosition.dx;
+                  double height = details.localPosition.dy - widget.height;
+                  double angleOfDisp = atan(width / height);
                   if (-widget.width - details.localPosition.dx >= MAX_RIGHT ||
                       -(widget.height * 2) + details.localPosition.dy >=
                           MAX_TOP) {
                     setState(() {
+                      angle = angleOfDisp - PIVOT_ANGLE;
                       rightPos = -widget.width - details.localPosition.dx;
                       topPos = -(widget.height * 2) + details.localPosition.dy;
                       cardStartOffset =
@@ -125,6 +136,7 @@ class _FoldableCardState extends State<FoldableCard> {
                     foldStartOffset =
                         Offset(0, widget.height - widget.clipSize);
                     foldEndOffset = Offset(widget.clipSize, widget.height);
+                    angle = 0;
                   });
                 },
                 child: Container(
