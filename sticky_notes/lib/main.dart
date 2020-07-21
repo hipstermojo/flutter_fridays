@@ -54,22 +54,24 @@ class _FoldableCardState extends State<FoldableCard> {
   Offset foldStartOffset;
   Offset foldEndOffset;
   double angle;
+  double cardSizeDiff;
   @override
   void initState() {
     super.initState();
-    rightPos = -widget.width + widget.clipSize;
-    topPos = -widget.height + widget.clipSize;
+    cardSizeDiff = (widget.width - widget.height).abs() / 2;
+    rightPos = -widget.width - cardSizeDiff + widget.clipSize;
+    topPos = -widget.height + cardSizeDiff + widget.clipSize;
     cardStartOffset = Offset(widget.width - widget.clipSize, 0);
     cardEndOffset = Offset(widget.width, widget.clipSize);
-    foldStartOffset = Offset(0, widget.height - widget.clipSize);
-    foldEndOffset = Offset(widget.clipSize, widget.height);
+    foldStartOffset = Offset(widget.clipSize, 0);
+    foldEndOffset = Offset(0, widget.clipSize);
     angle = 0;
   }
 
   @override
   Widget build(BuildContext context) {
-    final double MAX_TOP = -widget.height + widget.clipSize;
-    final double MAX_RIGHT = -widget.width + widget.clipSize;
+    final double MAX_TOP = -widget.height + cardSizeDiff + widget.clipSize;
+    final double MAX_RIGHT = -widget.width - cardSizeDiff + widget.clipSize;
     return Stack(
       overflow: Overflow.visible,
       alignment: Alignment.center,
@@ -98,54 +100,64 @@ class _FoldableCardState extends State<FoldableCard> {
           right: rightPos,
           top: topPos,
           child: Transform.rotate(
-            alignment: Alignment.bottomLeft,
-            angle: angle,
-            child: ClipPath(
-              clipper: CardClipper(
-                  startOffset: foldStartOffset, endOffset: foldEndOffset),
-              child: GestureDetector(
-                onVerticalDragStart: (DragStartDetails details) {},
-                onVerticalDragUpdate: (DragUpdateDetails details) {
-                  // TODO: Fix the issue of getting 90 as the angle of displacement
-                  double width = 0 - details.localPosition.dx;
-                  double height = details.localPosition.dy - widget.height;
-                  double angleOfDisp = atan(width / height);
-                  if (-widget.width - details.localPosition.dx >= MAX_RIGHT ||
-                      -(widget.height * 2) + details.localPosition.dy >=
-                          MAX_TOP) {
+            angle: -PIVOT_ANGLE * 2,
+            // angle: 0,
+            child: Transform.rotate(
+              alignment: Alignment.topLeft,
+              // angle: PIVOT_ANGLE * 2,
+              angle: 0,
+              child: ClipPath(
+                clipper: FoldClipper(
+                    startOffset: foldStartOffset, endOffset: foldEndOffset),
+                child: GestureDetector(
+                  onVerticalDragStart: (DragStartDetails details) {
+                    // print(details.localPosition);
+                  },
+                  onVerticalDragUpdate: (DragUpdateDetails details) {
+                    // TODO: Fix the issue of getting 90 as the angle of displacement
+                    double width = 0 - details.localPosition.dx;
+                    double height = details.localPosition.dy - widget.height;
+                    double angleOfDisp = atan(width / height);
+                    if (details.localPosition.dx + widget.clipSize < 0.0 ||
+                        details.localPosition.dy + widget.clipSize < 0.0) {
+                      // print(details.localPosition);
+                      setState(() {
+                        angle = angleOfDisp - PIVOT_ANGLE;
+                        rightPos = -widget.height +
+                            cardSizeDiff -
+                            details.localPosition.dy;
+                        topPos = -widget.height +
+                            cardSizeDiff -
+                            details.localPosition.dx;
+                        cardStartOffset =
+                            Offset(widget.width + details.localPosition.dy, 0);
+                        cardEndOffset =
+                            Offset(widget.width, -details.localPosition.dx);
+                        foldStartOffset = Offset(-details.localPosition.dx, 0);
+                        foldEndOffset = Offset(0, -details.localPosition.dy);
+                      });
+                    }
+                  },
+                  onVerticalDragEnd: (DragEndDetails details) {
                     setState(() {
-                      angle = angleOfDisp - PIVOT_ANGLE;
-                      rightPos = -widget.width - details.localPosition.dx;
-                      topPos = -(widget.height * 2) + details.localPosition.dy;
+                      rightPos = MAX_RIGHT;
+                      topPos = MAX_TOP;
                       cardStartOffset =
-                          Offset(widget.width + details.localPosition.dx, 0);
-                      cardEndOffset = Offset(widget.width,
-                          details.localPosition.dy - widget.height);
-                      foldStartOffset = Offset(0, -topPos);
-                      foldEndOffset =
-                          Offset(-details.localPosition.dx, widget.height);
+                          Offset(widget.width - widget.clipSize, 0);
+                      cardEndOffset = Offset(widget.width, widget.clipSize);
+                      foldStartOffset = Offset(widget.clipSize, 0);
+                      foldEndOffset = Offset(0, widget.clipSize);
+                      angle = 0;
                     });
-                  }
-                },
-                onVerticalDragEnd: (DragEndDetails details) {
-                  setState(() {
-                    rightPos = MAX_RIGHT;
-                    topPos = MAX_TOP;
-                    cardStartOffset = Offset(widget.width - widget.clipSize, 0);
-                    cardEndOffset = Offset(widget.width, widget.clipSize);
-                    foldStartOffset =
-                        Offset(0, widget.height - widget.clipSize);
-                    foldEndOffset = Offset(widget.clipSize, widget.height);
-                    angle = 0;
-                  });
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.pink,
-                      borderRadius: BorderRadius.circular(10.0)),
-                  height: widget.height,
-                  width: widget.width,
-                  child: Text("Some text"),
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.pink,
+                        borderRadius: BorderRadius.circular(10.0)),
+                    height: widget.height,
+                    width: widget.width,
+                    child: Text("Some text"),
+                  ),
                 ),
               ),
             ),
@@ -183,6 +195,37 @@ class CardClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CardClipper oldClipper) =>
+      oldClipper.startOffset != startOffset ||
+      oldClipper.endOffset != endOffset;
+}
+
+class FoldClipper extends CustomClipper<Path> {
+  /// A custom clipper that cuts the card edge. [startOffset] is an Offset
+  /// of the start of the edge and [endOffset] is an Offset of the end of
+  /// the edge. The cut edge runs diagonally from the top left to the bottom
+  /// right
+  FoldClipper({@required this.startOffset, @required this.endOffset});
+
+  Offset startOffset;
+  final Offset endOffset;
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    //Top left
+    path..moveTo(0.0, 0.0);
+    // Bottom left
+    // path..lineTo(0.0, startOffset.dy);
+    // Top Right
+    path..lineTo(startOffset.dx, startOffset.dy);
+    path..lineTo(endOffset.dx, endOffset.dy);
+    // Bottom right
+    // path..lineTo(size.width, size.height);
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(FoldClipper oldClipper) =>
       oldClipper.startOffset != startOffset ||
       oldClipper.endOffset != endOffset;
 }
