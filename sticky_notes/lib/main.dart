@@ -101,11 +101,9 @@ class _FoldableCardState extends State<FoldableCard> {
           top: topPos,
           child: Transform.rotate(
             angle: -PIVOT_ANGLE * 2,
-            // angle: 0,
             child: Transform.rotate(
               alignment: Alignment.topLeft,
-              // angle: PIVOT_ANGLE * 2,
-              angle: 0,
+              angle: angle,
               child: ClipPath(
                 clipper: FoldClipper(
                     startOffset: foldStartOffset, endOffset: foldEndOffset),
@@ -114,15 +112,23 @@ class _FoldableCardState extends State<FoldableCard> {
                     // print(details.localPosition);
                   },
                   onVerticalDragUpdate: (DragUpdateDetails details) {
-                    // TODO: Fix the issue of getting 90 as the angle of displacement
-                    double width = 0 - details.localPosition.dx;
-                    double height = details.localPosition.dy - widget.height;
-                    double angleOfDisp = atan(width / height);
+                    double angleOfDisp;
+                    if (details.localPosition.dy == 0.0) {
+                      angleOfDisp = 0;
+                    } else if (details.localPosition.dx == 0.0) {
+                      angleOfDisp = PIVOT_ANGLE * 2;
+                    } else {
+                      double width = -details.localPosition.dy;
+                      double height = -details.localPosition.dx;
+                      double distance =
+                          sqrt((width * width) + (height * height));
+                      angleOfDisp = asin(width / distance);
+                    }
+                    double rotation = (angleOfDisp - PIVOT_ANGLE) * 2;
                     if (details.localPosition.dx + widget.clipSize < 0.0 ||
                         details.localPosition.dy + widget.clipSize < 0.0) {
-                      // print(details.localPosition);
                       setState(() {
-                        angle = angleOfDisp - PIVOT_ANGLE;
+                        angle = rotation;
                         rightPos = -widget.height +
                             cardSizeDiff -
                             details.localPosition.dy;
