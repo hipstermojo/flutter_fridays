@@ -175,21 +175,19 @@ class ViewTasks extends StatelessWidget {
                   )
                 ],
               )),
-          Expanded(
-            flex: 1,
-            child: Container(
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Icon(Icons.home),
-                  GestureDetector(
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => CreateTask())),
-                      child: Icon(Icons.add_circle_outline)),
-                  Icon(Icons.calendar_today)
-                ],
-              ),
+          Container(
+            height: 70.0,
+            color: Colors.white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Icon(Icons.home),
+                GestureDetector(
+                    onTap: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => CreateTask())),
+                    child: Icon(Icons.add_circle_outline)),
+                Icon(Icons.calendar_today)
+              ],
             ),
           ),
         ],

@@ -11,7 +11,7 @@ class SliderController extends StatefulWidget {
 }
 
 class _SliderControllerState extends State<SliderController> {
-  static const double controllerRadius = 20.0;
+  static const double controllerRadius = 25.0;
   double yPos = Readings.BOTTOM_MARGIN - controllerRadius;
   double bottomMargin = Readings.BOTTOM_MARGIN;
 
@@ -47,7 +47,7 @@ class _SliderControllerState extends State<SliderController> {
               },
               child: CircleAvatar(
                 radius: controllerRadius,
-                backgroundColor: Colors.white,
+                backgroundColor: Color(0x10ffffff),
                 child: Icon(
                   Icons.unfold_more,
                   color: Colors.black,
@@ -66,12 +66,17 @@ class LinePainter extends CustomPainter {
 
   final Offset controllerPos;
   final double controllerRadius;
-  static const Color _redGradient = Color(0xff560920);
-  static const Color _blueGradient = Color(0xff2b6799);
+
+  static const Color _redGradient = Color(0xffB0166f);
+  static const Color _blueGradient = Color(0xff1b9fcd);
   static const double curveMargin = 10.0;
   @override
   void paint(Canvas canvas, Size size) {
     final double midX = size.width / 2;
+    final double startPosY = controllerPos.dy - controllerRadius * 2;
+    final double s = 0.2;
+    // final double span = (controllerRadius * 2) / size.height;
+    final double loc = (startPosY / size.height);
     final Paint linePainter = Paint()
       ..shader = LinearGradient(
         begin: Alignment.topCenter,
@@ -87,15 +92,27 @@ class LinePainter extends CustomPainter {
           height: size.height,
           width: 5.0))
       ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
       ..strokeWidth = 5.0;
 
-    canvas.drawLine(
-        Offset(midX, 0),
-        Offset(midX, controllerPos.dy - controllerRadius - curveMargin * 2),
-        linePainter);
+    Path curvePath = Path();
+    curvePath.moveTo(midX, 0);
+    curvePath.lineTo(midX, startPosY - 20);
+    // curvePath.quadraticBezierTo(midX * 0.1, controllerPos.dy - controllerRadius,
+    //     midX, controllerPos.dy + 20);
 
-    canvas.drawLine(Offset(midX, controllerPos.dy + controllerRadius),
-        Offset(midX, size.height), linePainter);
+    // curvePath.lineTo(size.width, 0);
+    curvePath.quadraticBezierTo(
+        0, startPosY + controllerRadius, midX, controllerPos.dy + 20);
+
+    if (controllerPos.dy + 20 <= size.height) {
+      curvePath.moveTo(midX, controllerPos.dy + 20);
+      curvePath.lineTo(midX, size.height);
+    }
+
+    curvePath.close();
+
+    canvas.drawPath(curvePath, linePainter);
   }
 
   @override

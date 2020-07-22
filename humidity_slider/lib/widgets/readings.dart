@@ -5,7 +5,7 @@ class Readings extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-  static const List<int> _readings = [0, 10, 25, 30, 35, 40, 45, 50, 75, 100];
+  static const List<int> readings = [0, 10, 25, 30, 35, 40, 45, 50, 75, 100];
   static const int _LOWER_HUMIDITY_LIMIT = 30;
   static const int _UPPER_HUMIDITY_LIMIT = 50;
   static const double BOTTOM_MARGIN = 30.0;
@@ -19,7 +19,7 @@ class Readings extends StatelessWidget {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: _readings
+            children: readings
                 .map((reading) => Container(
                       child: Row(
                         children: <Widget>[

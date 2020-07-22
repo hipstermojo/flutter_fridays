@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasktracker/screens/home_screen.dart';
 import 'package:tasktracker/screens/view_tasks.dart';
 
 void main() => runApp(MaterialApp(
@@ -15,5 +16,5 @@ void main() => runApp(MaterialApp(
               ),
               body1: TextStyle(
                   fontFamily: 'Muli', color: Colors.white, fontSize: 14.0))),
-      home: ViewTasks(),
+      home: HomeScreen(),
     ));
