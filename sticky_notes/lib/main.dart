@@ -105,8 +105,10 @@ class _FoldableCardState extends State<FoldableCard> {
               alignment: Alignment.topLeft,
               angle: angle,
               child: ClipPath(
-                clipper: FoldClipper(
-                    startOffset: foldStartOffset, endOffset: foldEndOffset),
+                clipper: CardClipper(
+                    startOffset: foldStartOffset,
+                    endOffset: foldEndOffset,
+                    isClipReverse: true),
                 child: GestureDetector(
                   onVerticalDragStart: (DragStartDetails details) {},
                   onVerticalDragUpdate: (DragUpdateDetails details) {
@@ -202,59 +204,44 @@ class CardClipper extends CustomClipper<Path> {
   /// of the start of the edge and [endOffset] is an Offset of the end of
   /// the edge. The cut edge runs diagonally from the top left to the bottom
   /// right
-  CardClipper({@required this.startOffset, @required this.endOffset});
+  CardClipper(
+      {@required this.startOffset,
+      @required this.endOffset,
+      this.isClipReverse = false});
 
   Offset startOffset;
   final Offset endOffset;
+  final bool isClipReverse;
   @override
   Path getClip(Size size) {
     Path path = Path();
-    // Bottom left
-    path..moveTo(0.0, size.height);
-    //Top left
-    path..lineTo(0.0, startOffset.dy);
-    // Top Right
-    path..lineTo(startOffset.dx, startOffset.dy);
-    path..lineTo(endOffset.dx, endOffset.dy);
-    // Bottom right
-    path..lineTo(size.width, size.height);
+    if (isClipReverse) {
+      //Top left
+      path..moveTo(0.0, 0.0);
+      // Bottom left
+      // path..lineTo(0.0, startOffset.dy);
+      // Top Right
+      path..lineTo(startOffset.dx, startOffset.dy);
+      path..lineTo(endOffset.dx, endOffset.dy);
+      // Bottom right
+      // path..lineTo(size.width, size.height);
+    } else {
+      // Bottom left
+      path..moveTo(0.0, size.height);
+      //Top left
+      path..lineTo(0.0, startOffset.dy);
+      // Top Right
+      path..lineTo(startOffset.dx, startOffset.dy);
+      path..lineTo(endOffset.dx, endOffset.dy);
+      // Bottom right
+      path..lineTo(size.width, size.height);
+    }
 
     return path;
   }
 
   @override
   bool shouldReclip(CardClipper oldClipper) =>
-      oldClipper.startOffset != startOffset ||
-      oldClipper.endOffset != endOffset;
-}
-
-class FoldClipper extends CustomClipper<Path> {
-  /// A custom clipper that cuts the card edge. [startOffset] is an Offset
-  /// of the start of the edge and [endOffset] is an Offset of the end of
-  /// the edge. The cut edge runs diagonally from the top left to the bottom
-  /// right
-  FoldClipper({@required this.startOffset, @required this.endOffset});
-
-  Offset startOffset;
-  final Offset endOffset;
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    //Top left
-    path..moveTo(0.0, 0.0);
-    // Bottom left
-    // path..lineTo(0.0, startOffset.dy);
-    // Top Right
-    path..lineTo(startOffset.dx, startOffset.dy);
-    path..lineTo(endOffset.dx, endOffset.dy);
-    // Bottom right
-    // path..lineTo(size.width, size.height);
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(FoldClipper oldClipper) =>
       oldClipper.startOffset != startOffset ||
       oldClipper.endOffset != endOffset;
 }
