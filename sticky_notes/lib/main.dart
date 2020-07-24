@@ -113,62 +113,7 @@ class _FoldableCardState extends State<FoldableCard> {
                 child: GestureDetector(
                   onVerticalDragStart: (DragStartDetails details) {},
                   onVerticalDragUpdate: (DragUpdateDetails details) {
-                    double angleOfDisp;
-                    if (details.localPosition.dy == 0.0) {
-                      angleOfDisp = 0;
-                    } else if (details.localPosition.dx == 0.0) {
-                      angleOfDisp = PIVOT_ANGLE * 2;
-                    } else {
-                      double width = -details.localPosition.dy;
-                      double height = -details.localPosition.dx;
-                      double distance =
-                          sqrt((width * width) + (height * height));
-                      angleOfDisp = asin(width / distance);
-                    }
-
-                    double rotation = (angleOfDisp - PIVOT_ANGLE) * 2;
-                    Offset topOffset = Offset(0.0, -details.localPosition.dx);
-                    double topX = (cos(-rotation) * topOffset.dx) -
-                        (sin(-rotation) * topOffset.dy);
-                    double topY = (sin(-rotation) * topOffset.dx) +
-                        (cos(-rotation) * topOffset.dy);
-                    double gradientTop = topY / topX;
-                    double x1 = ((topOffset.dy - topY) / gradientTop) + topX;
-                    double topSize =
-                        sqrt((x1 * x1) + (topOffset.dy * topOffset.dy));
-
-                    Offset bottomOffset =
-                        Offset(-details.localPosition.dy, 0.0);
-                    double bottomX = (cos(-rotation) * bottomOffset.dx) -
-                        (sin(-rotation) * bottomOffset.dy);
-                    double bottomY = (sin(-rotation) * bottomOffset.dx) +
-                        (cos(-rotation) * bottomOffset.dy);
-                    double gradientBottom = bottomY / bottomX;
-                    double y1 = (gradientBottom * (bottomOffset.dx - bottomX)) +
-                        bottomY;
-                    double bottomSize =
-                        sqrt((y1 * y1) + (bottomOffset.dx * bottomOffset.dx));
-
-                    if (details.localPosition.dx < 0.0 &&
-                        details.localPosition.dy < 0.0) {
-                      setState(() {
-                        angle = rotation;
-                        rightPos = -widget.height +
-                            cardSizeDiff -
-                            details.localPosition.dy;
-                        topPos = -widget.height +
-                            cardSizeDiff -
-                            details.localPosition.dx;
-
-                        cardStartOffset = Offset(
-                            widget.width + details.localPosition.dy + x1, 0);
-                        cardEndOffset = Offset(
-                            widget.width, -details.localPosition.dx - y1);
-
-                        foldStartOffset = Offset(topSize, 0);
-                        foldEndOffset = Offset(0, bottomSize);
-                      });
-                    }
+                    _updateFold(details.localPosition);
                   },
                   onVerticalDragEnd: (DragEndDetails details) {
                     setState(() {
@@ -197,6 +142,55 @@ class _FoldableCardState extends State<FoldableCard> {
         )
       ],
     );
+  }
+
+  /// _updateFold updates the clipping positions of the base card and fold
+  /// as well as the rotation. It only needs the current [Offset] as an argument.
+  void _updateFold(Offset position) {
+    double angleOfDisp;
+    if (position.dy == 0.0) {
+      angleOfDisp = 0;
+    } else if (position.dx == 0.0) {
+      angleOfDisp = PIVOT_ANGLE * 2;
+    } else {
+      double width = -position.dy;
+      double height = -position.dx;
+      double distance = sqrt((width * width) + (height * height));
+      angleOfDisp = asin(width / distance);
+    }
+
+    double rotation = (angleOfDisp - PIVOT_ANGLE) * 2;
+    Offset topOffset = Offset(0.0, -position.dx);
+    double topX =
+        (cos(-rotation) * topOffset.dx) - (sin(-rotation) * topOffset.dy);
+    double topY =
+        (sin(-rotation) * topOffset.dx) + (cos(-rotation) * topOffset.dy);
+    double gradientTop = topY / topX;
+    double x1 = ((topOffset.dy - topY) / gradientTop) + topX;
+    double topSize = sqrt((x1 * x1) + (topOffset.dy * topOffset.dy));
+
+    Offset bottomOffset = Offset(-position.dy, 0.0);
+    double bottomX =
+        (cos(-rotation) * bottomOffset.dx) - (sin(-rotation) * bottomOffset.dy);
+    double bottomY =
+        (sin(-rotation) * bottomOffset.dx) + (cos(-rotation) * bottomOffset.dy);
+    double gradientBottom = bottomY / bottomX;
+    double y1 = (gradientBottom * (bottomOffset.dx - bottomX)) + bottomY;
+    double bottomSize = sqrt((y1 * y1) + (bottomOffset.dx * bottomOffset.dx));
+
+    if (position.dx < 0.0 && position.dy < 0.0) {
+      setState(() {
+        angle = rotation;
+        rightPos = -widget.height + cardSizeDiff - position.dy;
+        topPos = -widget.height + cardSizeDiff - position.dx;
+
+        cardStartOffset = Offset(widget.width + position.dy + x1, 0);
+        cardEndOffset = Offset(widget.width, -position.dx - y1);
+
+        foldStartOffset = Offset(topSize, 0);
+        foldEndOffset = Offset(0, bottomSize);
+      });
+    }
   }
 }
 
