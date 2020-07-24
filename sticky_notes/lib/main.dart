@@ -47,7 +47,8 @@ class FoldableCard extends StatefulWidget {
   _FoldableCardState createState() => _FoldableCardState();
 }
 
-class _FoldableCardState extends State<FoldableCard> {
+class _FoldableCardState extends State<FoldableCard>
+    with SingleTickerProviderStateMixin {
   double rightPos;
   double topPos;
   Offset cardStartOffset;
@@ -56,6 +57,9 @@ class _FoldableCardState extends State<FoldableCard> {
   Offset foldEndOffset;
   double angle;
   double cardSizeDiff;
+
+  AnimationController _controller;
+  Offset foldLastPos;
   @override
   void initState() {
     super.initState();
@@ -67,12 +71,13 @@ class _FoldableCardState extends State<FoldableCard> {
     foldStartOffset = Offset(widget.clipSize, 0);
     foldEndOffset = Offset(0, widget.clipSize);
     angle = 0;
+    _controller = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1500));
+    foldLastPos = Offset(widget.clipSize, widget.clipSize);
   }
 
   @override
   Widget build(BuildContext context) {
-    final double MAX_TOP = -widget.height + cardSizeDiff + widget.clipSize;
-    final double MAX_RIGHT = -widget.width - cardSizeDiff + widget.clipSize;
     return Stack(
       overflow: Overflow.visible,
       alignment: Alignment.center,
@@ -114,17 +119,37 @@ class _FoldableCardState extends State<FoldableCard> {
                   onVerticalDragStart: (DragStartDetails details) {},
                   onVerticalDragUpdate: (DragUpdateDetails details) {
                     _updateFold(details.localPosition);
+                    foldLastPos = details.localPosition;
                   },
                   onVerticalDragEnd: (DragEndDetails details) {
-                    setState(() {
-                      rightPos = MAX_RIGHT;
-                      topPos = MAX_TOP;
-                      cardStartOffset =
-                          Offset(widget.width - widget.clipSize, 0);
-                      cardEndOffset = Offset(widget.width, widget.clipSize);
-                      foldStartOffset = Offset(widget.clipSize, 0);
-                      foldEndOffset = Offset(0, widget.clipSize);
-                      angle = 0;
+                    if (foldLastPos.distance >
+                        max(widget.height, widget.width) * 2 / 3) {
+                      _controller.duration = Duration(milliseconds: 1500);
+                    } else {
+                      _controller.duration = Duration(milliseconds: 500);
+                    }
+                    _controller.forward();
+                    _controller.addListener(() {
+                      if (_controller.status == AnimationStatus.completed) {
+                        _controller.reset();
+                        setState(() {
+                          angle = 0;
+                        });
+                      } else if (_controller.status ==
+                          AnimationStatus.forward) {
+                        double posX =
+                            (1.0 - _controller.value) * foldLastPos.dx;
+                        double posY =
+                            (1.0 - _controller.value) * foldLastPos.dy;
+                        if (posX > -widget.clipSize) {
+                          posX = -widget.clipSize;
+                        }
+                        if (posY > -widget.clipSize) {
+                          posY = -widget.clipSize;
+                        }
+                        Offset newPos = Offset(posX, posY);
+                        _updateFold(newPos);
+                      }
                     });
                   },
                   child: Container(
@@ -191,6 +216,12 @@ class _FoldableCardState extends State<FoldableCard> {
         foldEndOffset = Offset(0, bottomSize);
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
 
