@@ -23,8 +23,46 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         backgroundColor: Color(0xFF465254),
-        body: Center(
-          child: FoldableCard(width: width, clipSize: clipSize, height: height),
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              elevation: 0.0,
+              expandedHeight: 100.0,
+              backgroundColor: Color(0xFF465254),
+              pinned: true,
+              leading: Icon(
+                Icons.menu,
+                color: Colors.white,
+              ),
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(
+                  "All notes",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              actions: [
+                CircleAvatar(
+                  child: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: Colors.grey,
+                  radius: 16.0,
+                ),
+                SizedBox(
+                  height: 20.0,
+                  width: 20.0,
+                )
+              ],
+            ),
+            SliverList(
+                delegate: SliverChildListDelegate(
+              List.filled(
+                  3,
+                  FoldableCard(
+                      width: width, clipSize: clipSize, height: height)),
+            ))
+          ],
         ),
       ),
     );
@@ -78,94 +116,98 @@ class _FoldableCardState extends State<FoldableCard>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      overflow: Overflow.visible,
+    return Container(
+      margin: EdgeInsetsDirectional.only(bottom: 20.0),
       alignment: Alignment.center,
-      children: [
-        ClipPath(
-          clipper: CardClipper(
-              startOffset: cardStartOffset, endOffset: cardEndOffset),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.pinkAccent,
-                borderRadius: BorderRadius.circular(10.0)),
-            height: widget.height,
-            width: widget.width,
-            alignment: Alignment.center,
+      child: Stack(
+        overflow: Overflow.visible,
+        alignment: Alignment.center,
+        children: [
+          ClipPath(
+            clipper: CardClipper(
+                startOffset: cardStartOffset, endOffset: cardEndOffset),
             child: Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(
-                children: <Widget>[
-                  Text("Useful hints to build a perfect design for iPhone XS")
-                ],
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          right: rightPos,
-          top: topPos,
-          child: Transform.rotate(
-            angle: -PIVOT_ANGLE * 2,
-            child: Transform.rotate(
-              alignment: Alignment.topLeft,
-              angle: angle,
-              child: ClipPath(
-                clipper: CardClipper(
-                    startOffset: foldStartOffset,
-                    endOffset: foldEndOffset,
-                    isClipReverse: true),
-                child: GestureDetector(
-                  onVerticalDragStart: (DragStartDetails details) {},
-                  onVerticalDragUpdate: (DragUpdateDetails details) {
-                    _updateFold(details.localPosition);
-                    foldLastPos = details.localPosition;
-                  },
-                  onVerticalDragEnd: (DragEndDetails details) {
-                    if (foldLastPos.distance >
-                        max(widget.height, widget.width) * 2 / 3) {
-                      _controller.duration = Duration(milliseconds: 1500);
-                    } else {
-                      _controller.duration = Duration(milliseconds: 500);
-                    }
-                    _controller.forward();
-                    _controller.addListener(() {
-                      if (_controller.status == AnimationStatus.completed) {
-                        _controller.reset();
-                        setState(() {
-                          angle = 0;
-                        });
-                      } else if (_controller.status ==
-                          AnimationStatus.forward) {
-                        double posX =
-                            (1.0 - _controller.value) * foldLastPos.dx;
-                        double posY =
-                            (1.0 - _controller.value) * foldLastPos.dy;
-                        if (posX > -widget.clipSize) {
-                          posX = -widget.clipSize;
-                        }
-                        if (posY > -widget.clipSize) {
-                          posY = -widget.clipSize;
-                        }
-                        Offset newPos = Offset(posX, posY);
-                        _updateFold(newPos);
-                      }
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.pink,
-                        borderRadius: BorderRadius.circular(10.0)),
-                    height: widget.height,
-                    width: widget.width,
-                    child: Text("Some text"),
-                  ),
+              decoration: BoxDecoration(
+                  color: Colors.pinkAccent,
+                  borderRadius: BorderRadius.circular(10.0)),
+              height: widget.height,
+              width: widget.width,
+              alignment: Alignment.center,
+              child: Container(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  children: <Widget>[
+                    Text("Useful hints to build a perfect design for iPhone XS")
+                  ],
                 ),
               ),
             ),
           ),
-        )
-      ],
+          Positioned(
+            right: rightPos,
+            top: topPos,
+            child: Transform.rotate(
+              angle: -PIVOT_ANGLE * 2,
+              child: Transform.rotate(
+                alignment: Alignment.topLeft,
+                angle: angle,
+                child: ClipPath(
+                  clipper: CardClipper(
+                      startOffset: foldStartOffset,
+                      endOffset: foldEndOffset,
+                      isClipReverse: true),
+                  child: GestureDetector(
+                    onVerticalDragStart: (DragStartDetails details) {},
+                    onVerticalDragUpdate: (DragUpdateDetails details) {
+                      _updateFold(details.localPosition);
+                      foldLastPos = details.localPosition;
+                    },
+                    onVerticalDragEnd: (DragEndDetails details) {
+                      if (foldLastPos.distance >
+                          max(widget.height, widget.width) * 2 / 3) {
+                        _controller.duration = Duration(milliseconds: 1500);
+                      } else {
+                        _controller.duration = Duration(milliseconds: 500);
+                      }
+                      _controller.forward();
+                      _controller.addListener(() {
+                        if (_controller.status == AnimationStatus.completed) {
+                          _controller.reset();
+                          setState(() {
+                            angle = 0;
+                          });
+                        } else if (_controller.status ==
+                            AnimationStatus.forward) {
+                          double posX =
+                              (1.0 - _controller.value) * foldLastPos.dx;
+                          double posY =
+                              (1.0 - _controller.value) * foldLastPos.dy;
+                          if (posX > -widget.clipSize) {
+                            posX = -widget.clipSize;
+                          }
+                          if (posY > -widget.clipSize) {
+                            posY = -widget.clipSize;
+                          }
+                          Offset newPos = Offset(posX, posY);
+                          _updateFold(newPos);
+                        }
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.pink,
+                          borderRadius: BorderRadius.circular(10.0)),
+                      height: widget.height,
+                      width: widget.width,
+                      child: Text("Some text"),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 
