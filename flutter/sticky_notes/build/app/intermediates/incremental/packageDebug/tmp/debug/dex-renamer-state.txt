@@ -1,0 +1,4 @@
+#Fri Jul 31 14:25:53 EAT 2020
+base.0=/home/hipstermojo/AndroidStudioProjects/flutter_fridays/sticky_notes/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
