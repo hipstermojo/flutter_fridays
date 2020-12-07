@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
 FLUTTER_ROOT=/home/hipstermojo/src/bin/flutter
-FLUTTER_APPLICATION_PATH=/home/hipstermojo/AndroidStudioProjects/flutter_fridays/sticky_notes
+FLUTTER_APPLICATION_PATH=/home/hipstermojo/src/flutter_fridays/sticky_notes
 FLUTTER_TARGET=lib/main.dart
 FLUTTER_BUILD_DIR=build
 SYMROOT=${SOURCE_ROOT}/../build/ios

@@ -3,37 +3,37 @@
   "packages": [
     {
       "name": "async",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.4.2",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.5.0-nullsafety.1",
       "packageUri": "lib/",
-      "languageVersion": "2.2"
+      "languageVersion": "2.10"
     },
     {
       "name": "boolean_selector",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.0.0",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0-nullsafety.1",
       "packageUri": "lib/",
-      "languageVersion": "2.4"
+      "languageVersion": "2.10"
     },
     {
       "name": "characters",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.1.0-nullsafety.2",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.1.0-nullsafety.3",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
     {
       "name": "charcode",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/charcode-1.1.3",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/charcode-1.2.0-nullsafety.1",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.10"
     },
     {
       "name": "clock",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/clock-1.0.1",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0-nullsafety.1",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.10"
     },
     {
       "name": "collection",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0-nullsafety.2",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0-nullsafety.3",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
@@ -45,9 +45,9 @@
     },
     {
       "name": "fake_async",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.1.0",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0-nullsafety.1",
       "packageUri": "lib/",
-      "languageVersion": "2.2"
+      "languageVersion": "2.10"
     },
     {
       "name": "flutter",
@@ -59,25 +59,25 @@
       "name": "flutter_test",
       "rootUri": "file:///home/hipstermojo/src/bin/flutter/packages/flutter_test",
       "packageUri": "lib/",
-      "languageVersion": "2.2"
+      "languageVersion": "2.10"
     },
     {
       "name": "matcher",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.9",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.10-nullsafety.1",
       "packageUri": "lib/",
-      "languageVersion": "2.7"
+      "languageVersion": "2.10"
     },
     {
       "name": "meta",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.3.0-nullsafety.2",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.3.0-nullsafety.4",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
     {
       "name": "path",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.7.0",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.0-nullsafety.1",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.10"
     },
     {
       "name": "sky_engine",
@@ -87,49 +87,49 @@
     },
     {
       "name": "source_span",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.7.0",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.0-nullsafety.2",
       "packageUri": "lib/",
-      "languageVersion": "2.6"
+      "languageVersion": "2.10"
     },
     {
       "name": "stack_trace",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.9.5",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0-nullsafety.4",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.10"
     },
     {
       "name": "stream_channel",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.0.0",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0-nullsafety.1",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.10"
     },
     {
       "name": "string_scanner",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.0.5",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0-nullsafety.1",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.10"
     },
     {
       "name": "term_glyph",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.1.0",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0-nullsafety.1",
       "packageUri": "lib/",
-      "languageVersion": "1.8"
+      "languageVersion": "2.10"
     },
     {
       "name": "test_api",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.2.18",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.2.19-nullsafety.2",
       "packageUri": "lib/",
-      "languageVersion": "2.7"
+      "languageVersion": "2.10"
     },
     {
       "name": "typed_data",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0-nullsafety.2",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0-nullsafety.3",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
     {
       "name": "vector_math",
-      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.0-nullsafety.2",
+      "rootUri": "file:///home/hipstermojo/src/bin/flutter/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.0-nullsafety.3",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
@@ -140,7 +140,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-07-29T06:14:18.964717Z",
+  "generated": "2020-12-07T14:13:52.002345Z",
   "generator": "pub",
-  "generatorVersion": "2.10.0-0.0.dev.flutter-24c7666def"
+  "generatorVersion": "2.11.0-251.0.dev"
 }
